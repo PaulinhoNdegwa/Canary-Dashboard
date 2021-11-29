@@ -5,7 +5,8 @@ export default createStore({
   state: {
     alerts: [],
     devices: [],
-    fetching_error: null
+    fetching_error: null,
+    selectedDevice: null
   },
   mutations: {
     FETCH_ALL_ALERTS: (state, alerts) => {
@@ -16,6 +17,9 @@ export default createStore({
     },
     SET_FETCHING_ERROR: (state, error) => {
       state.fetching_error = error
+    },
+    SET_SELECTED_DEVICE: (state, device_id) => {
+      state.selectedDevice = device_id
     }
   },
   actions: {
@@ -30,6 +34,9 @@ export default createStore({
           console.log(error)
           commit('SET_FETCHING_ERROR', error.message)
         })
+    },
+    setSelectedDevice: ({commit}, device_id) => {
+      commit('SET_SELECTED_DEVICE', device_id)
     }
   },
   getters: {
@@ -40,7 +47,21 @@ export default createStore({
       return state.alerts.filter(alert => alert.acknowledged === "False").length
     },
     countGhostDevices: (state) => {
-      return state.devices.filter(device => device.ghost == "True").length
+      return state.devices.filter(device => device.ghost === "True").length
+    },
+    getAlertsPerDevice: (state) => {
+      const deviceAlertsCount =[]
+      state.devices.forEach(device => {
+        const count = state.alerts.filter(alert => alert.node_id === device.device_id).length
+        deviceAlertsCount.push({
+          device: device.name,
+          alerts_count: count
+        })
+      })
+      return deviceAlertsCount;
+    },
+    getDeviceAlerts: (state) => (id) => {
+      return state.alerts.filter(alert => alert.node_id === id)
     }
   },
   modules: {

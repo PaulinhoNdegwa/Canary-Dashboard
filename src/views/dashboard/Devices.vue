@@ -11,7 +11,8 @@
         class="device"
         v-for="device in devices"
         :key="device.device_id"
-        :class="{ ghost: device.ghost === 'True' }"
+        :class="{ selected: device.device_id === selectedDevice }"
+        @click="deviceDetails(device.device_id)"
       >
         <td class="device-details">
           <span class="name">{{ device.name }}</span>
@@ -22,24 +23,31 @@
       </tr>
     </table>
   </div>
-  <hr>
-  <br>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 export default {
   name: "Devices",
   computed: {
-    ...mapState(["devices"]),
+    ...mapState(["devices", "selectedDevice"]),
+  },
+  methods: {
+    deviceDetails(device_id) {
+      this.setSelectedDevice(device_id)
+    },
+    ...mapActions(['setSelectedDevice'])
   },
 };
 </script>
 
 <style>
+.devices-container {
+    width: 600px;
+}
 .devices-table {
-  width: 90%;
-  margin: 20px auto;
+  width: 100%;
+  margin: 15px auto;
 }
 .device,
 .device-header {
@@ -54,18 +62,19 @@ export default {
   font-weight: 700;
   text-transform: uppercase;
   font-size: 18px;
-  background: rgb(173, 173, 173);
+  background: rgb(218, 218, 218);
+  border: none;
+  border-bottom: 1px solid black;
 }
 .device {
-  border-radius: 5px;
   padding: 15px 20px;
   align-self: center;
   font-size: 16px;
 }
 .device:hover {
-    transform: scaleY(1.1);
-    background: rgb(255, 249, 242);
-    cursor: pointer;
+  transform: scaleY(1.1);
+  background: rgb(255, 249, 242);
+  cursor: pointer;
 }
 .device td,
 .device-header th {
@@ -88,7 +97,11 @@ export default {
 .device-details .ip-address {
   font-style: italic;
 }
-.ghost {
-  /* background: rgb(240, 228, 213); */
+.selected {
+    background: dimgrey;
+    color: white;
+}
+.selected:hover {
+    background: dimgrey;
 }
 </style>

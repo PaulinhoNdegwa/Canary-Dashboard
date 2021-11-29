@@ -3,21 +3,41 @@
     <div class="device-count">
       <h1>{{ devices.length }}</h1>
       <p>devices</p>
-      <hr style="width: 100%" />
-      <span
-        >Ghosts: <strong>{{ countGhostDevices }}</strong></span
-      >
     </div>
+
     <div class="alert-count">
       <h1>{{ alerts.length }}</h1>
       <p>alerts</p>
-      <hr style="width: 100%" />
-      <span
-        >Acknowledged: <strong>{{ countAcknowledgedAlerts }}</strong></span
+    </div>
+
+    <div class="device-count">
+      <h3>Devices</h3>
+      <div
+        class="alerts-count"
+        v-for="device in getAlertsPerDevice"
+        :key="device.device"
       >
-      <span
-        >Unacknowledged: <strong>{{ countUnacknowledgedAlerts }}</strong></span
-      >
+        <span>{{ device.device }}: </span>
+        <span>
+          <strong>{{ device.alerts_count }}</strong>
+        </span>
+      </div>
+    </div>
+
+    <div class="alert-count">
+      <h3>Alerts</h3>
+      <div class="alerts-count">
+        <span>Acknowledged: </span>
+        <span
+          ><strong>{{ countAcknowledgedAlerts }}</strong></span
+        >
+      </div>
+      <div class="alerts-count">
+        <span>Unacknowledged: </span>
+        <span
+          ><strong>{{ countUnacknowledgedAlerts }}</strong></span
+        >
+      </div>
     </div>
   </div>
 </template>
@@ -32,6 +52,7 @@ export default {
       "countAcknowledgedAlerts",
       "countUnacknowledgedAlerts",
       "countGhostDevices",
+      "getAlertsPerDevice",
     ]),
   },
 };
@@ -55,15 +76,30 @@ export default {
   flex-direction: column;
   align-content: center;
   padding: 20px 10px;
-  width: 250px;
+  width: 315px;
   border: 1px #888 solid;
   border-radius: 5px;
   margin: 20px;
 }
 .device-count h1,
 .alert-count h1 {
-  margin: 10px 10px 0 10px;
+  margin: 30px 10px 10px 10px;
   font-size: 44px;
+}
+.device-count h3 {
+  margin: 10px 0 5px 0;
+  text-decoration: underline;
+}
+
+.alert-count h3 {
+  margin: 20px 0 5px 0;
+  text-decoration: underline;
+}
+.alerts-count {
+  text-align: left;
+  padding: 0px 30px;
+  display: flex;
+  justify-content: space-between;
 }
 .device-count p,
 .alert-count p {
