@@ -2,7 +2,9 @@
   <div class="alerts-container">
     <h3>Device Alerts</h3>
     <h4 v-if="!selectedDevice">Click on a device to display it's alerts</h4>
-    <h4 v-if="selectedDevice && getDeviceAlerts(selectedDevice).length === 0 ">No alerts on this device</h4>
+    <h4 v-if="selectedDevice && getDeviceAlerts(selectedDevice).length === 0">
+      No alerts on this device
+    </h4>
     <div v-if="selectedDevice" class="scrollable">
       <table class="alerts-table">
         <tr class="alert-header">
@@ -12,17 +14,31 @@
           <th>Created</th>
         </tr>
         <tr
-          v-for="alert in getDeviceAlerts(selectedDevice)"
+          v-for="alert in alerts"
           :key="alert.id"
           class="alert"
           :class="{ acknowledged: alert.acknowledged === 'True' }"
         >
-          <td>{{ alert.description }}</td>
-          <td>{{ alert.dst_host }}</td>
-          <td>{{ alert.src_host }}</td>
-          <td>{{ alert.created_age }} ago</td>
+          <td>{{ alert.description ? alert.description : "-" }}</td>
+          <td>{{ alert.dst_host  ? alert.dst_host : "-" }}</td>
+          <td>{{ alert.src_host  ? alert.src_host : "-" }}</td>
+          <td>{{ alert.created_age ? alert.created_age : "-" }} ago</td>
         </tr>
       </table>
+      <p>
+        Showing {{ this.getDeviceAlerts(this.selectedDevice).length > pageSize ? pageSize : this.getDeviceAlerts(this.selectedDevice).length }} /
+        {{ this.getDeviceAlerts(this.selectedDevice).length }}
+      </p>
+      <p>
+        Page {{ currentPage }}/
+        {{
+          Math.ceil(this.getDeviceAlerts(this.selectedDevice).length / pageSize)
+        }}
+      </p>
+      <p class="pagination">
+        <button @click="prevPage">Prev</button>
+        <button @click="nextPage">Next</button>
+      </p>
     </div>
   </div>
 </template>
@@ -33,12 +49,34 @@ export default {
   name: "DeviceDetails",
   data() {
     return {
-      alerts: [],
+      pageSize: 10,
+      currentPage: 1,
     };
+  },
+  methods: {
+    nextPage: function () {
+      if (
+        this.currentPage * this.pageSize <
+        this.getDeviceAlerts(this.selectedDevice).length
+      )
+        this.currentPage++;
+    },
+    prevPage: function () {
+      if (this.currentPage > 1) this.currentPage--;
+    },
   },
   computed: {
     ...mapGetters(["getDeviceAlerts"]),
     ...mapState(["selectedDevice"]),
+    alerts() {
+      return this.getDeviceAlerts(this.selectedDevice).filter(
+        (device, index) => {
+          let start = (this.currentPage - 1) * this.pageSize;
+          let end = this.currentPage * this.pageSize;
+          if (index >= start && index < end) return true;
+        }
+      );
+    },
   },
 };
 </script>
@@ -50,9 +88,6 @@ export default {
 }
 .scrollable {
   width: 100%;
-  height: 800px;
-  overflow-x: hidden;
-  overflow-y: auto;
   margin: 0;
 }
 .scrollable::-webkit-scrollbar-track {
@@ -86,14 +121,13 @@ export default {
   background: rgb(218, 218, 218);
   border: none;
   border-bottom: 1px solid black;
-  
 }
 .alert {
   padding: 15px 20px;
   align-self: center;
   font-size: 15px;
-  background: crimson;
-  color: #fff;
+  border: 1px crimson solid;
+  color: #000;
 }
 .alert:hover {
   transform: scaleY(1.1);
@@ -108,7 +142,17 @@ export default {
   text-align: center;
 }
 .acknowledged {
-  background: rgb(132, 248, 132);
+  border: 1px green solid;
   color: #000;
+}
+.pagination button {
+  padding: 5px 10px;
+  margin: 5px 10px;
+  border-radius: 2px;
+  font-size: 15px;
+}
+.scrollable p {
+  margin: 5px 0;
+  font-style: italic;
 }
 </style>
