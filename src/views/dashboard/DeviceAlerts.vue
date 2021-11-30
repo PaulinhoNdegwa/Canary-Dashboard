@@ -5,7 +5,7 @@
     <h4 v-if="selectedDevice && getDeviceAlerts(selectedDevice).length === 0">
       No alerts on this device
     </h4>
-    <div v-if="selectedDevice" class="scrollable">
+    <div v-if="selectedDevice" class="device-alerts">
       <table class="alerts-table">
         <tr class="alert-header">
           <th>Alert</th>
@@ -19,14 +19,37 @@
           class="alert"
           :class="{ acknowledged: alert.acknowledged === 'True' }"
         >
-          <td>{{ alert.description ? alert.description : "-" }}</td>
-          <td>{{ alert.dst_host  ? alert.dst_host : "-" }}</td>
-          <td>{{ alert.src_host  ? alert.src_host : "-" }}</td>
+          <td
+            class="clickable"
+            @click="
+              toggleModal('description', alert.description, alert.node_id)
+            "
+          >
+            {{ alert.description ? alert.description : "-" }}
+          </td>
+          <td
+            class="clickable"
+            @click="toggleModal('dst_host', alert.dst_host, alert.node_id)"
+          >
+            {{ alert.dst_host ? alert.dst_host : "-" }}
+          </td>
+          <td
+            class="clickable"
+            @click="toggleModal('src_host', alert.src_host, alert.node_id)"
+          >
+            {{ alert.src_host ? alert.src_host : "-" }}
+          </td>
           <td>{{ alert.created_age ? alert.created_age : "-" }} ago</td>
         </tr>
       </table>
       <p>
-        Showing {{ this.getDeviceAlerts(this.selectedDevice).length > pageSize ? pageSize : this.getDeviceAlerts(this.selectedDevice).length }} /
+        Showing
+        {{
+          this.getDeviceAlerts(this.selectedDevice).length > pageSize
+            ? pageSize
+            : this.getDeviceAlerts(this.selectedDevice).length
+        }}
+        /
         {{ this.getDeviceAlerts(this.selectedDevice).length }}
       </p>
       <p>
@@ -40,34 +63,55 @@
         <button @click="nextPage">Next</button>
       </p>
     </div>
+    <Modal
+      v-if="showModal && filterBy && filterValue"
+      @close="toggleModal"
+      :filterBy="filterBy"
+      :filterValue="filterValue"
+      :filterNodeId="filterNodeId"
+    />
   </div>
 </template>
 
 <script>
 import { mapGetters, mapState } from "vuex";
+import Modal from "../../components/Modal.vue";
 export default {
   name: "DeviceDetails",
+  components: { Modal },
   data() {
     return {
       pageSize: 10,
       currentPage: 1,
+      showModal: false,
+      filterBy: null,
+      filterValue: null,
+      filterNodeId: null,
     };
   },
   methods: {
-    nextPage: function () {
+    nextPage() {
       if (
         this.currentPage * this.pageSize <
         this.getDeviceAlerts(this.selectedDevice).length
       )
         this.currentPage++;
     },
-    prevPage: function () {
+    prevPage() {
       if (this.currentPage > 1) this.currentPage--;
+    },
+    toggleModal(filter_by, value, node_id) {
+      this.showModal = !this.showModal;
+      this.filterBy = filter_by;
+      this.filterValue = value;
+      this.filterNodeId = node_id;
+      document.body.classList.remove("modal-open");
     },
   },
   computed: {
     ...mapGetters(["getDeviceAlerts"]),
     ...mapState(["selectedDevice"]),
+
     alerts() {
       return this.getDeviceAlerts(this.selectedDevice).filter(
         (device, index) => {
@@ -78,6 +122,14 @@ export default {
       );
     },
   },
+  watch: {
+    selectedDevice(oldVal) {
+      this.showModal = false;
+      this.filterBy = null;
+      this.filterValue = null;
+      this.filterNodeId = null;
+    },
+  },
 };
 </script>
 
@@ -85,22 +137,6 @@ export default {
 .alerts-container {
   width: 800px;
   margin: 0 20px;
-}
-.scrollable {
-  width: 100%;
-  margin: 0;
-}
-.scrollable::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 6px rgba(82, 82, 82, 0.3);
-}
-.scrollable::-webkit-scrollbar {
-  width: 1em;
-}
-.scrollable::-webkit-scrollbar-thumb {
-  background-color: #b4b4b4;
-  outline: 1px solid rgb(78, 78, 78);
-  border-radius: 2px;
-  margin: 10px 0;
 }
 .alerts-table {
   width: 100%;
@@ -141,6 +177,10 @@ export default {
   width: 100%;
   text-align: center;
 }
+.alert .clickable:hover {
+  font-weight: 600;
+  color: #3385ff;
+}
 .acknowledged {
   border: 1px green solid;
   color: #000;
@@ -151,7 +191,7 @@ export default {
   border-radius: 2px;
   font-size: 15px;
 }
-.scrollable p {
+.device-alerts p {
   margin: 5px 0;
   font-style: italic;
 }

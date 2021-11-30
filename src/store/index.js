@@ -35,7 +35,7 @@ export default createStore({
           commit('SET_FETCHING_ERROR', error.message)
         })
     },
-    setSelectedDevice: ({commit}, device_id) => {
+    setSelectedDevice: ({ commit }, device_id) => {
       commit('SET_SELECTED_DEVICE', device_id)
     }
   },
@@ -50,7 +50,7 @@ export default createStore({
       return state.devices.filter(device => device.ghost === "True").length
     },
     getAlertsPerDevice: (state) => {
-      const deviceAlertsCount =[]
+      const deviceAlertsCount = []
       state.devices.forEach(device => {
         const count = state.alerts.filter(alert => alert.node_id === device.device_id).length
         deviceAlertsCount.push({
@@ -62,6 +62,15 @@ export default createStore({
     },
     getDeviceAlerts: (state) => (id) => {
       return state.alerts.filter(alert => alert.node_id === id)
+    },
+    filterAlertsBy: (state) => (filter_by, value, node_id) => {
+      if (filter_by == 'dst_host') {
+        return state.alerts.filter(alert => alert.dst_host == value && alert.node_id == node_id)
+      } else if (filter_by == 'description') {
+        return state.alerts.filter(alert => alert.description == value && alert.node_id == node_id)
+      } else if (filter_by == 'src_host') {
+        return state.alerts.filter(alert => alert.src_host == value && alert.node_id == node_id)
+      }
     }
   },
   modules: {
