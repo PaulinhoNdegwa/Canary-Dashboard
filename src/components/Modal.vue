@@ -1,9 +1,9 @@
 <template>
   <div class="backdrop" @click.self="closeModal">
     <div class="modal">
-      <h3>Filtered Alerts</h3>
+      <h3 style="text-align: center;">Filtered Alerts</h3>
       <p>
-        Device Id: <strong>{{ filterNodeId }}</strong>
+        Device: <strong>{{ getDeviceById(filterNodeId).name }}</strong>
       </p>
       <p>
         Filtered by <strong>{{ labels[filterBy] }}</strong
@@ -30,7 +30,7 @@
             <td>{{ alert.created_age ? alert.created_age : "-" }} ago</td>
           </tr>
         </table>
-        <p>
+        <p style="text-align: center;">
           Showing {{ alerts.length }}
           {{ alerts.length > 1 ? "alerts" : "alert" }}
         </p>
@@ -68,7 +68,7 @@ export default {
     );
   },
   computed: {
-    ...mapGetters(["filterAlertsBy"]),
+    ...mapGetters(["filterAlertsBy", "getDeviceById"]),
   },
 };
 </script>
@@ -88,10 +88,11 @@ body.modal-open {
 .modal {
   position: relative;
   width: 85%;
-  padding: 20px;
-  margin: 70px auto;
+  padding: 40px;
+  margin: 65px auto;
   background: white;
   border-radius: 10px;
+  text-align: left;
 }
 .closeModal {
   position: absolute;
@@ -107,7 +108,7 @@ body.modal-open {
   height: 550px;
   overflow-x: hidden;
   overflow-y: auto;
-  padding: 15px;
+  padding-right: 10px;
 }
 .scrollable .alert:hover {
   font-size: 15px;
@@ -122,7 +123,8 @@ body.modal-open {
   padding: 0;
 }
 .modal p {
-    font-size: 16px;
+    font-size: 17px;
+    margin: 15px 0;
 }
 @media screen and (max-width: 1000px) {
   .backdrop {

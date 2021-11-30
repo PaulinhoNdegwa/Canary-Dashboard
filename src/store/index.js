@@ -71,6 +71,9 @@ export default createStore({
       } else if (filter_by == 'src_host') {
         return state.alerts.filter(alert => alert.src_host == value && alert.node_id == node_id).reverse()
       }
+    },
+    getDeviceById: (state) => (device_id) => {
+      return state.devices.find(device => device.node_id === device_id)
     }
   },
   modules: {
