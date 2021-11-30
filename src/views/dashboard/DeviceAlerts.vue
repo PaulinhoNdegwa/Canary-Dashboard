@@ -79,7 +79,13 @@
           >
             {{ alert.src_host ? alert.src_host : "-" }}
           </td>
-          <td>{{ alert.created_age ? alert.created_age : "-" }} ago</td>
+          <td class="created-date">
+            {{ alert.created_age ? alert.created_age : "-" }}
+            ago
+            <span class="created-date-tooltip">{{
+              alert.created_printable
+            }}</span>
+          </td>
         </tr>
       </table>
       <p>
@@ -191,8 +197,8 @@ export default {
       this.filterValue = null;
       this.filterNodeId = null;
       this.currentPage = 1;
-      this.currentSort = 'created';
-      this.currentSortDir = 'desc'
+      this.currentSort = "created";
+      this.currentSortDir = "desc";
     },
   },
 };
@@ -222,6 +228,9 @@ export default {
   background: rgb(218, 218, 218);
   border: none;
   border-bottom: 1px solid black;
+}
+.alert-header:hover {
+  cursor: pointer;
 }
 .alert-header i {
   margin: 3px;
@@ -273,5 +282,29 @@ export default {
 .device-alerts p {
   margin: 10px 0;
   font-style: italic;
+}
+.created-date {
+  /* Set cell data to relative in order to position tooltip absolutely */
+  position: relative;
+}
+.created-date-tooltip {
+  /* Hide tooltip until cell is hovered */
+  visibility: hidden;
+  font-size: 13px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 5px;
+  /* Position the tooltip to the top */
+  position: absolute;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  width: 150px;
+  margin-left: -75px;
+}
+.created-date:hover .created-date-tooltip {
+  visibility: visible;
 }
 </style>

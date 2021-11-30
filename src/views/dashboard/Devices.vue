@@ -47,7 +47,7 @@ export default {
 }
 .devices-table {
   width: 100%;
-  margin: 15px auto;
+  margin: 10px auto;
 }
 .device,
 .device-header {
