@@ -8,10 +8,50 @@
     <div v-if="selectedDevice" class="device-alerts">
       <table class="alerts-table">
         <tr class="alert-header">
-          <th>Alert</th>
-          <th>Destination</th>
-          <th>Source</th>
-          <th>Created</th>
+          <th @click="sort('description')">
+            Alert
+            <i
+              v-if="currentSort === 'description' && currentSortDir === 'asc'"
+              class="fa fa-angle-double-up"
+            ></i>
+            <i
+              v-if="currentSort === 'description' && currentSortDir === 'desc'"
+              class="fa fa-angle-double-down"
+            ></i>
+          </th>
+          <th @click="sort('dst_host')">
+            Destination
+            <i
+              v-if="currentSort === 'dst_host' && currentSortDir === 'asc'"
+              class="fa fa-angle-double-up"
+            ></i>
+            <i
+              v-if="currentSort === 'dst_host' && currentSortDir === 'desc'"
+              class="fa fa-angle-double-down"
+            ></i>
+          </th>
+          <th @click="sort('src_host')">
+            Source
+            <i
+              v-if="currentSort === 'src_host' && currentSortDir === 'asc'"
+              class="fa fa-angle-double-up"
+            ></i>
+            <i
+              v-if="currentSort === 'src_host' && currentSortDir === 'desc'"
+              class="fa fa-angle-double-down"
+            ></i>
+          </th>
+          <th @click="sort('created')">
+            Created
+            <i
+              v-if="currentSort === 'created' && currentSortDir === 'asc'"
+              class="fa fa-angle-double-up"
+            ></i>
+            <i
+              v-if="currentSort === 'created' && currentSortDir === 'desc'"
+              class="fa fa-angle-double-down"
+            ></i>
+          </th>
         </tr>
         <tr
           v-for="alert in alerts"
@@ -95,9 +135,17 @@ export default {
       filterBy: null,
       filterValue: null,
       filterNodeId: null,
+      currentSort: "created",
+      currentSortDir: "desc",
     };
   },
   methods: {
+    sort(s) {
+      if (s === this.currentSort) {
+        this.currentSortDir = this.currentSortDir == "asc" ? "desc" : "asc";
+      }
+      this.currentSort = s;
+    },
     nextPage() {
       if (
         this.currentPage * this.pageSize <
@@ -121,13 +169,19 @@ export default {
     ...mapState(["selectedDevice"]),
 
     alerts() {
-      return this.getDeviceAlerts(this.selectedDevice).filter(
-        (device, index) => {
+      return this.getDeviceAlerts(this.selectedDevice)
+        .sort((a, b) => {
+          let modifier = 1;
+          if (this.currentSortDir === "desc") modifier = -1;
+          if (a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
+          if (a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
+          return 0;
+        })
+        .filter((device, index) => {
           let start = (this.currentPage - 1) * this.pageSize;
           let end = this.currentPage * this.pageSize;
           if (index >= start && index < end) return true;
-        }
-      );
+        });
     },
   },
   watch: {
@@ -136,7 +190,9 @@ export default {
       this.filterBy = null;
       this.filterValue = null;
       this.filterNodeId = null;
-      this.currentPage = 1
+      this.currentPage = 1;
+      this.currentSort = 'created';
+      this.currentSortDir = 'desc'
     },
   },
 };
@@ -166,6 +222,10 @@ export default {
   background: rgb(218, 218, 218);
   border: none;
   border-bottom: 1px solid black;
+}
+.alert-header i {
+  margin: 3px;
+  font-weight: 600;
 }
 .alert {
   padding: 15px 20px;
