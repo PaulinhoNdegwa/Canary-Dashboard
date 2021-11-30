@@ -19,7 +19,10 @@
           <span class="ip-address">{{ device.ip_address }}</span>
         </td>
         <td>{{ device.description }}</td>
-        <td>{{ device.device_live }}</td>
+        <td>
+          <i v-if=" device.device_live == 'True'" class="fa fa-check-circle device-live"></i>
+          <i v-else class="fa fa-check-circle device-live disabled"></i>
+        </td>
       </tr>
     </table>
   </div>
@@ -104,5 +107,13 @@ export default {
 }
 .selected:hover {
     background: dimgrey;
+}
+.device-live {
+  margin: 20px 0;
+  font-size: 20px;
+  color: rgb(3, 201, 3);
+}
+.device-live.disabled {
+  color: rgb(153, 153, 153);
 }
 </style>
