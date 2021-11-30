@@ -2,8 +2,14 @@
   <div class="backdrop" @click.self="closeModal">
     <div class="modal">
       <h3>Filtered Alerts</h3>
-      <!-- <p>Filter by {{ filterBy }}. Value: {{ filterValue }}</p> -->
-      <p>Showing {{ alerts.length }} alerts</p>
+      <p>
+        Device Id: <strong>{{ filterNodeId }}</strong>
+      </p>
+      <p>
+        Filtered by <strong>{{ labels[filterBy] }}</strong
+        >. Value: <strong>{{ filterValue }}</strong>
+      </p>
+      <button @click="closeModal" class="closeModal">X</button>
       <div v-if="alerts.length" class="scrollable">
         <table class="alerts-table">
           <tr class="alert-header">
@@ -24,6 +30,10 @@
             <td>{{ alert.created_age ? alert.created_age : "-" }} ago</td>
           </tr>
         </table>
+        <p>
+          Showing {{ alerts.length }}
+          {{ alerts.length > 1 ? "alerts" : "alert" }}
+        </p>
       </div>
       <h4 v-else>No alerts found</h4>
     </div>
@@ -37,6 +47,11 @@ export default {
   data() {
     return {
       alerts: [],
+      labels: {
+        description: "Description",
+        src_host: "Source Host",
+        dst_host: "Destination Host",
+      },
     };
   },
   methods: {
@@ -71,13 +86,23 @@ body.modal-open {
   overflow: hidden;
 }
 .modal {
+  position: relative;
   width: 85%;
   padding: 20px;
   margin: 70px auto;
   background: white;
   border-radius: 10px;
 }
-
+.closeModal {
+  position: absolute;
+  top: 40px;
+  right: 50px;
+  background: crimson;
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  padding: 3px 6px;
+}
 .modal .scrollable {
   height: 550px;
   overflow-x: hidden;
@@ -96,15 +121,18 @@ body.modal-open {
   border: none;
   padding: 0;
 }
+.modal p {
+    font-size: 16px;
+}
 @media screen and (max-width: 1000px) {
   .backdrop {
     width: 100%;
     font-size: 13px;
   }
   .alert {
-      padding: 5px;
+    padding: 5px;
   }
-  .alert td{
+  .alert td {
     font-size: 13px;
   }
 }
