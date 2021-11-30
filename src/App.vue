@@ -2,6 +2,7 @@
   <div id="nav">
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link>
+    <hr>
   </div>
   <router-view/>
 </template>
@@ -9,6 +10,7 @@
 <style>
 body {
   background: #eee;
+  margin: 0;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -19,15 +21,21 @@ body {
 }
 
 #nav {
-  padding: 30px;
+  padding: 20px;
+  font-size: 16px;
+  text-transform: uppercase;
 }
 
 #nav a {
+  display: inline-block;
   font-weight: bold;
-  color: #2c3e50;
+  margin: 10px 15px;
+  color: #000;
+  text-decoration: none;
+  font-size: 18px;
 }
 
 #nav a.router-link-exact-active {
-  color: #42b983;
+  color: crimson;
 }
 </style>

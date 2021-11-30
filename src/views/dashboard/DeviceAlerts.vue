@@ -52,15 +52,23 @@
         /
         {{ this.getDeviceAlerts(this.selectedDevice).length }}
       </p>
-      <p>
+
+      <p class="pagination">
+        <button :disabled="currentPage === 1" @click="prevPage">Prev</button>
         Page {{ currentPage }}/
         {{
           Math.ceil(this.getDeviceAlerts(this.selectedDevice).length / pageSize)
         }}
-      </p>
-      <p class="pagination">
-        <button @click="prevPage">Prev</button>
-        <button @click="nextPage">Next</button>
+        <button
+          :disabled="
+            Math.ceil(
+              this.getDeviceAlerts(this.selectedDevice).length / pageSize
+            ) === currentPage
+          "
+          @click="nextPage"
+        >
+          Next
+        </button>
       </p>
     </div>
     <Modal
@@ -128,6 +136,7 @@ export default {
       this.filterBy = null;
       this.filterValue = null;
       this.filterNodeId = null;
+      this.currentPage = 1
     },
   },
 };
@@ -185,14 +194,24 @@ export default {
   border: 1px green solid;
   color: #000;
 }
+.pagination {
+  margin: 10px 0;
+}
 .pagination button {
   padding: 5px 10px;
   margin: 5px 10px;
   border-radius: 2px;
   font-size: 15px;
 }
+.pagination button:hover {
+  background: #ddd;
+  cursor: pointer;
+}
+.pagination p {
+  display: inline-block;
+}
 .device-alerts p {
-  margin: 5px 0;
+  margin: 10px 0;
   font-style: italic;
 }
 </style>

@@ -61,8 +61,11 @@ export default {
 <style>
 .summary {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   flex-wrap: wrap;
+  background: #fff;
+  margin: 0 20px;
+  border-radius: 5px;
 }
 .device-count h1 {
   color: green;
@@ -88,16 +91,24 @@ export default {
 }
 .device-count h3 {
   margin: 10px 0 5px 0;
-  text-decoration: underline;
+  /* text-decoration: underline; */
+  text-transform: uppercase;
+  color: #000;
 }
 
 .alert-count h3 {
   margin: 20px 0 5px 0;
-  text-decoration: underline;
+  /* text-decoration: underline; */
+  text-transform: uppercase;
+  color: #000;
+}
+.device-count strong,
+.alert-count strong {
+  color: #000;
 }
 .alerts-count {
   text-align: left;
-  padding: 0px 30px;
+  padding: 2px 30px;
   display: flex;
   justify-content: space-between;
 }

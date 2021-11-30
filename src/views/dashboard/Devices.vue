@@ -56,7 +56,7 @@ export default {
   display: flex;
   text-align: left;
   justify-content: space-around;
-  border: 1px solid black;
+  border: 1px solid #ddd;
 }
 .device-header {
   font-weight: 700;
@@ -67,6 +67,7 @@ export default {
   border-bottom: 1px solid black;
 }
 .device {
+  background: rgb(238, 238, 238);
   padding: 15px 20px;
   align-self: center;
   font-size: 16px;

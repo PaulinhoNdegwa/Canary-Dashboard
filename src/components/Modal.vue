@@ -78,7 +78,7 @@ export default {
   top: 0;
   position: fixed;
   background: rgba(0, 0, 0, 0.5);
-  width: 54%;
+  width: 55%;
   height: 100%;
   right: 0;
 }

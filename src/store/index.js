@@ -61,15 +61,15 @@ export default createStore({
       return deviceAlertsCount;
     },
     getDeviceAlerts: (state) => (id) => {
-      return state.alerts.filter(alert => alert.node_id === id)
+      return state.alerts.filter(alert => alert.node_id === id).reverse()
     },
     filterAlertsBy: (state) => (filter_by, value, node_id) => {
       if (filter_by == 'dst_host') {
-        return state.alerts.filter(alert => alert.dst_host == value && alert.node_id == node_id)
+        return state.alerts.filter(alert => alert.dst_host == value && alert.node_id == node_id).reverse()
       } else if (filter_by == 'description') {
-        return state.alerts.filter(alert => alert.description == value && alert.node_id == node_id)
+        return state.alerts.filter(alert => alert.description == value && alert.node_id == node_id).reverse()
       } else if (filter_by == 'src_host') {
-        return state.alerts.filter(alert => alert.src_host == value && alert.node_id == node_id)
+        return state.alerts.filter(alert => alert.src_host == value && alert.node_id == node_id).reverse()
       }
     }
   },
