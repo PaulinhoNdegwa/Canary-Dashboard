@@ -91,14 +91,12 @@ export default {
 }
 .device-count h3 {
   margin: 10px 0 5px 0;
-  /* text-decoration: underline; */
   text-transform: uppercase;
   color: #000;
 }
 
 .alert-count h3 {
   margin: 20px 0 5px 0;
-  /* text-decoration: underline; */
   text-transform: uppercase;
   color: #000;
 }

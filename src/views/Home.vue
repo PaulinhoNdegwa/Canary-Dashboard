@@ -1,5 +1,9 @@
 <template>
-  <div class="home">
+  <Loader v-if="loading" />
+  <div class="error" v-if="fetching_error">
+    Ooops! Error fetching devices. Try again later or contact support
+  </div>
+  <div v-if="devices.length" class="home">
     <div class="summary-container">
       <h2>{{ greeting }} John Doe,</h2>
       <h3>
@@ -14,6 +18,7 @@
     </div>
     <hr />
   </div>
+  <div class="error" v-if="!devices.length && !loading && !fetching_error">Sorry, No devices found</div>
   <br />
 </template>
 
@@ -22,7 +27,8 @@
 import Summary from "./dashboard/Summary.vue";
 import Devices from "./dashboard/Devices.vue";
 import DeviceAlerts from "./dashboard/DeviceAlerts.vue";
-import { mapGetters } from "vuex";
+import Loader from "../components/Loader.vue";
+import { mapGetters, mapState } from "vuex";
 import { greeting } from "../utils/utils";
 
 export default {
@@ -31,6 +37,7 @@ export default {
     Summary,
     Devices,
     DeviceAlerts,
+    Loader,
   },
   mounted() {
     this.$store.dispatch("fetchAllRecords");
@@ -40,6 +47,7 @@ export default {
     greeting() {
       return greeting();
     },
+    ...mapState(["devices", "loading", "fetching_error"]),
   },
 };
 </script>
@@ -84,5 +92,10 @@ export default {
   font-size: 22px;
   text-align: left;
   margin: 20px 0 10px 0;
+}
+.error {
+  font-size: 20px;
+  color: crimson;
+  margin: 20px 0;
 }
 </style>

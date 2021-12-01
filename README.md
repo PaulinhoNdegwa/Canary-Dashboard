@@ -10,7 +10,7 @@ This is an application built using VueJS and CSS that provides a user with a sim
 3. A user can view details of a device's alerts including description, source host, destination host and date_created
 4. A user can sort a device's alerts by all fields
 5. A user can filter alerts by: description, source host, destination host
-6. Other features eg. alert pagination, hover effects for more details
+6. Other features eg. alert pagination, hover effects to show full date
 
 ## Screenshots
 ![alt text](https://github.com/PaulinhoNdegwa/Canary-Dashboard/blob/master/screenshots/dash-summary.png?raw=true)

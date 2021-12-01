@@ -5,6 +5,7 @@ export default createStore({
   state: {
     alerts: [],
     devices: [],
+    loading: false,
     fetching_error: null,
     selectedDevice: null
   },
@@ -20,19 +21,25 @@ export default createStore({
     },
     SET_SELECTED_DEVICE: (state, device_id) => {
       state.selectedDevice = device_id
+    },
+    SET_LOADING_STATUS: (state, loading) => {
+      state.loading = loading
     }
   },
   actions: {
     fetchAllRecords: ({ commit }) => {
+      commit('SET_LOADING_STATUS', true)
       // FETCH FROM API then commit to update state
       axios.get('https://thinkst-frontend-resources.s3-eu-west-1.amazonaws.com/incidents/data.json')
         .then(res => {
           commit('FETCH_ALL_ALERTS', res.data.alerts)
           commit('FETCH_ALL_DEVICES', res.data.device_list)
+          commit('SET_LOADING_STATUS', false)
         })
         .catch(error => {
           console.log(error)
           commit('SET_FETCHING_ERROR', error.message)
+          commit('SET_LOADING_STATUS', false)
         })
     },
     setSelectedDevice: ({ commit }, device_id) => {

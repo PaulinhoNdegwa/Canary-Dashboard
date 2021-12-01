@@ -8,7 +8,6 @@ const greeting = () => {
     } else {
         greeting = 'Good evening'
     }
-    console.log(greeting)
     return greeting;
 }
 
