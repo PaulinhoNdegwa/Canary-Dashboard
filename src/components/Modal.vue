@@ -148,14 +148,11 @@ export default {
   height: 100%;
   right: 0;
 }
-body.modal-open {
-  overflow: hidden;
-}
 .modal {
   position: relative;
   width: 85%;
   padding: 40px;
-  margin: 65px auto;
+  margin: 55px auto;
   background: white;
   border-radius: 10px;
   text-align: left;
