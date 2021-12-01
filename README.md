@@ -11,10 +11,21 @@ This is an application built using VueJS and CSS that provides a user with a sim
 4. A user can sort a device's alerts by all fields
 5. A user can filter alerts by: description, source host, destination host
 6. Other features eg. alert pagination, hover effects for more details
-## Setup/Installation Requirements
-#### Requirements: Node
 
-Setup Procedure:
+## Screenshots
+![alt text](https://github.com/PaulinhoNdegwa/Canary-Dashboard/blob/master/screenshots/dash-summary.png?raw=true)
+Dashboard summary
+
+![alt text](https://github.com/PaulinhoNdegwa/Canary-Dashboard/blob/master/screenshots/device-alerts.png?raw=true)
+Device alerts
+
+![alt text](https://github.com/PaulinhoNdegwa/Canary-Dashboard/blob/master/screenshots/filtered-alerts.png?raw=true)
+Filtered alerts
+## Setup/Installation Requirements
+### Requirements
+1. Node
+
+### Setup Procedure
 * Clone the repository
 ```
     $ git clone https://github.com/PaulinhoNdegwa/Canary-Dashboard.git

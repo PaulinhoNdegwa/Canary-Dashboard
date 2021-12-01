@@ -195,7 +195,7 @@ export default {
 .alert td {
   font-size: 14px;
 }
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 1200px) {
   .backdrop {
     width: 100%;
     font-size: 13px;
