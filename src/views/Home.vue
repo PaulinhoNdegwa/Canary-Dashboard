@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div class="summary-container">
-      <h2>Hi John Doe,</h2>
+      <h2>{{ greeting }} John Doe,</h2>
       <h3>
         You have <strong>{{ countUnacknowledgedAlerts }}</strong> unacknowledged
         alerts
@@ -23,6 +23,7 @@ import Summary from "./dashboard/Summary.vue";
 import Devices from "./dashboard/Devices.vue";
 import DeviceAlerts from "./dashboard/DeviceAlerts.vue";
 import { mapGetters } from "vuex";
+import { greeting } from "../utils/utils";
 
 export default {
   name: "Home",
@@ -36,6 +37,9 @@ export default {
   },
   computed: {
     ...mapGetters(["countUnacknowledgedAlerts"]),
+    greeting() {
+      return greeting();
+    },
   },
 };
 </script>
