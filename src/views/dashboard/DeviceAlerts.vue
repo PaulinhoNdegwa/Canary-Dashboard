@@ -237,15 +237,15 @@ export default {
   font-weight: 600;
 }
 .alert {
-  padding: 15px 20px;
+  padding: 13px 10px;
   align-self: center;
-  font-size: 15px;
+  font-size: 14px;
   border: 1px crimson solid;
   color: #000;
 }
 .alert:hover {
   transform: scaleY(1.1);
-  font-size: 16px;
+  font-size: 15px;
   cursor: pointer;
   color: #000;
 }

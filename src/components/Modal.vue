@@ -1,7 +1,7 @@
 <template>
   <div class="backdrop" @click.self="closeModal">
     <div class="modal">
-      <h3 style="text-align: center;">Filtered Alerts</h3>
+      <h3 style="text-align: center">Filtered Alerts</h3>
       <p>
         Device: <strong>{{ getDeviceById(filterNodeId).name }}</strong>
       </p>
@@ -30,9 +30,57 @@
             <td>{{ alert.created_age ? alert.created_age : "-" }} ago</td>
           </tr>
         </table>
-        <p style="text-align: center;">
-          Showing {{ alerts.length }}
-          {{ alerts.length > 1 ? "alerts" : "alert" }}
+
+        <p style="text-align: center">
+          Showing
+          {{
+            this.filterAlertsBy(
+              this.filterBy,
+              this.filterValue,
+              this.filterNodeId
+            ).length > pageSize
+              ? pageSize
+              : this.filterAlertsBy(
+                  this.filterBy,
+                  this.filterValue,
+                  this.filterNodeId
+                ).length
+          }}
+          /
+          {{
+            this.filterAlertsBy(
+              this.filterBy,
+              this.filterValue,
+              this.filterNodeId
+            ).length
+          }}
+        </p>
+        <p style="text-align: center" class="pagination">
+          <button :disabled="currentPage === 1" @click="prevPage">Prev</button>
+          Page {{ currentPage }}/
+          {{
+            Math.ceil(
+              this.filterAlertsBy(
+                this.filterBy,
+                this.filterValue,
+                this.filterNodeId
+              ).length / pageSize
+            )
+          }}
+          <button
+            :disabled="
+              Math.ceil(
+                this.filterAlertsBy(
+                  this.filterBy,
+                  this.filterValue,
+                  this.filterNodeId
+                ).length / pageSize
+              ) === currentPage
+            "
+            @click="nextPage"
+          >
+            Next
+          </button>
         </p>
       </div>
       <h4 v-else>No alerts found</h4>
@@ -46,34 +94,52 @@ export default {
   props: ["filterBy", "filterValue", "filterNodeId"],
   data() {
     return {
-      alerts: [],
       labels: {
         description: "Description",
         src_host: "Source Host",
         dst_host: "Destination Host",
       },
+      pageSize: 7,
+      currentPage: 1,
     };
   },
   methods: {
     closeModal() {
       this.$emit("close");
     },
+    nextPage() {
+      if (
+        this.currentPage * this.pageSize <
+        this.filterAlertsBy(this.filterBy, this.filterValue, this.filterNodeId)
+          .length
+      )
+        this.currentPage++;
+    },
+    prevPage() {
+      if (this.currentPage > 1) this.currentPage--;
+    },
   },
   mounted() {
     document.body.classList.add("modal-open");
-    this.alerts = this.filterAlertsBy(
-      this.filterBy,
-      this.filterValue,
-      this.filterNodeId
-    );
   },
   computed: {
     ...mapGetters(["filterAlertsBy", "getDeviceById"]),
+    alerts() {
+      return this.filterAlertsBy(
+        this.filterBy,
+        this.filterValue,
+        this.filterNodeId
+      ).filter((device, index) => {
+        let start = (this.currentPage - 1) * this.pageSize;
+        let end = this.currentPage * this.pageSize;
+        if (index >= start && index < end) return true;
+      });
+    },
   },
 };
 </script>
 
-<style>
+<style scoped>
 .backdrop {
   top: 0;
   position: fixed;
@@ -123,8 +189,14 @@ body.modal-open {
   padding: 0;
 }
 .modal p {
-    font-size: 17px;
-    margin: 15px 0;
+  font-size: 17px;
+  margin: 15px 0;
+}
+.alert {
+  padding: 8px 10px;
+}
+.alert td {
+  font-size: 14px;
 }
 @media screen and (max-width: 1000px) {
   .backdrop {
