@@ -81,6 +81,9 @@ export default createStore({
     },
     getDeviceById: (state) => (device_id) => {
       return state.devices.find(device => device.node_id === device_id)
+    },
+    filterUnacknowledgedAlerts: (state) => {
+      return state.alerts.filter(alert => alert.acknowledged === "False")
     }
   },
   modules: {

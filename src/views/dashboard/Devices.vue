@@ -77,7 +77,7 @@ export default {
 }
 .device:hover {
   transform: scaleY(1.1);
-  background: rgb(255, 249, 242);
+  background: rgb(192, 192, 192);
   cursor: pointer;
 }
 .device td,

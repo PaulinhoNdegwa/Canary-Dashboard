@@ -146,11 +146,11 @@ export default {
     };
   },
   methods: {
-    sort(s) {
-      if (s === this.currentSort) {
+    sort(sort_by) {
+      if (sort_by === this.currentSort) {
         this.currentSortDir = this.currentSortDir == "asc" ? "desc" : "asc";
       }
-      this.currentSort = s;
+      this.currentSort = sort_by;
     },
     nextPage() {
       if (

@@ -7,8 +7,9 @@
     <div class="summary-container">
       <h2>{{ greeting }} John Doe,</h2>
       <h3>
-        You have <strong>{{ countUnacknowledgedAlerts }}</strong> unacknowledged
-        alerts
+        You have
+        <span @click="toggleModal">{{ countUnacknowledgedAlerts }}</span>
+        unacknowledged alerts
       </h3>
       <Summary />
     </div>
@@ -22,6 +23,11 @@
     Sorry, No devices found
   </div>
   <br />
+  <Modal
+    v-if="showUnacknowledged"
+    @close="toggleModal"
+    :unacknowledged="true"
+  />
 </template>
 
 <script>
@@ -30,16 +36,23 @@ import Summary from "./dashboard/Summary.vue";
 import Devices from "./dashboard/Devices.vue";
 import DeviceAlerts from "./dashboard/DeviceAlerts.vue";
 import Loader from "../components/Loader.vue";
+import Modal from "../components/Modal.vue";
 import { mapGetters, mapState } from "vuex";
 import { greeting } from "../utils/utils";
 
 export default {
   name: "Home",
+  data() {
+    return {
+      showUnacknowledged: false,
+    };
+  },
   components: {
     Summary,
     Devices,
     DeviceAlerts,
     Loader,
+    Modal,
   },
   mounted() {
     this.$store.dispatch("fetchAllRecords");
@@ -51,13 +64,19 @@ export default {
     },
     ...mapState(["devices", "loading", "fetching_error"]),
   },
+  methods: {
+    toggleModal() {
+      this.showUnacknowledged = !this.showUnacknowledged;
+      document.body.classList.remove("modal-open");
+    },
+  },
 };
 </script>
 
 <style>
 .summary-container {
   margin: 0 20px;
-  padding: 10px 0;
+  padding: 10px 0 20px 0;
   border-radius: 5px;
   background: linear-gradient(135deg, #008479 0%, #02f15d 80%);
 }
@@ -83,10 +102,15 @@ export default {
   margin-left: 45px;
   color: rgb(230, 230, 230);
 }
-.summary-container > h3 > strong {
+.summary-container > h3 > span {
   font-style: italic;
   color: crimson;
   font-weight: 700;
+}
+.summary-container > h3 > span:hover {
+  cursor: pointer;
+  font-weight: 900;
+  color: red;
 }
 .devices-container > h3,
 .alerts-container > h3 {

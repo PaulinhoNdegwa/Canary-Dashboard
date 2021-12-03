@@ -2,13 +2,20 @@
   <div class="backdrop" @click.self="closeModal">
     <div class="modal">
       <h3 style="text-align: center">Filtered Alerts</h3>
-      <p>
-        Device: <strong>{{ getDeviceById(filterNodeId).name }}</strong>
-      </p>
-      <p>
-        Filtered by <strong>{{ labels[filterBy] }}</strong
-        >. Value: <strong>{{ filterValue }}</strong>
-      </p>
+      <div v-if="filterNodeId">
+        <p>
+          Device: <strong>{{ getDeviceById(filterNodeId).name }}</strong>
+        </p>
+        <p>
+          Filtered by: <strong>{{ labels[filterBy] }}</strong
+          >. Value: <strong>{{ filterValue }}</strong>
+        </p>
+      </div>
+      <div v-else>
+        <p style="color: #000; font-size: 18px; margin-left: 15px">
+          Filtered by: <strong>All unacknowledged alerts</strong>
+        </p>
+      </div>
       <button @click="closeModal" class="closeModal">X</button>
       <div v-if="alerts.length" class="scrollable">
         <table class="alerts-table">
@@ -34,25 +41,25 @@
         <p style="text-align: center">
           Showing
           {{
-            this.filterAlertsBy(
-              this.filterBy,
-              this.filterValue,
-              this.filterNodeId
-            ).length > pageSize
+            (unacknowledged
+              ? this.filterUnacknowledgedAlerts.length
+              : this.filterAlertsBy(
+                  this.filterBy,
+                  this.filterValue,
+                  this.filterNodeId
+                ).length) > pageSize
               ? pageSize
+              : alerts.length
+          }}
+          /
+          {{
+            unacknowledged
+              ? this.filterUnacknowledgedAlerts.length
               : this.filterAlertsBy(
                   this.filterBy,
                   this.filterValue,
                   this.filterNodeId
                 ).length
-          }}
-          /
-          {{
-            this.filterAlertsBy(
-              this.filterBy,
-              this.filterValue,
-              this.filterNodeId
-            ).length
           }}
         </p>
         <p style="text-align: center" class="pagination">
@@ -60,21 +67,25 @@
           Page {{ currentPage }}/
           {{
             Math.ceil(
-              this.filterAlertsBy(
-                this.filterBy,
-                this.filterValue,
-                this.filterNodeId
-              ).length / pageSize
+              (unacknowledged
+                ? this.filterUnacknowledgedAlerts.length
+                : this.filterAlertsBy(
+                    this.filterBy,
+                    this.filterValue,
+                    this.filterNodeId
+                  ).length) / pageSize
             )
           }}
           <button
             :disabled="
               Math.ceil(
-                this.filterAlertsBy(
-                  this.filterBy,
-                  this.filterValue,
-                  this.filterNodeId
-                ).length / pageSize
+                (unacknowledged
+                  ? this.filterUnacknowledgedAlerts.length
+                  : this.filterAlertsBy(
+                      this.filterBy,
+                      this.filterValue,
+                      this.filterNodeId
+                    ).length) / pageSize
               ) === currentPage
             "
             @click="nextPage"
@@ -91,7 +102,7 @@
 <script>
 import { mapGetters } from "vuex";
 export default {
-  props: ["filterBy", "filterValue", "filterNodeId"],
+  props: ["filterBy", "filterValue", "filterNodeId", "unacknowledged"],
   data() {
     return {
       labels: {
@@ -109,9 +120,13 @@ export default {
     },
     nextPage() {
       if (
-        this.currentPage * this.pageSize <
-        this.filterAlertsBy(this.filterBy, this.filterValue, this.filterNodeId)
-          .length
+        this.currentPage * this.pageSize < this.unacknowledged
+          ? this.filterUnacknowledgedAlerts.length
+          : this.filterAlertsBy(
+              this.filterBy,
+              this.filterValue,
+              this.filterNodeId
+            ).length
       )
         this.currentPage++;
     },
@@ -123,13 +138,23 @@ export default {
     document.body.classList.add("modal-open");
   },
   computed: {
-    ...mapGetters(["filterAlertsBy", "getDeviceById"]),
+    ...mapGetters([
+      "filterAlertsBy",
+      "getDeviceById",
+      "filterUnacknowledgedAlerts",
+    ]),
     alerts() {
-      return this.filterAlertsBy(
-        this.filterBy,
-        this.filterValue,
-        this.filterNodeId
-      ).filter((device, index) => {
+      let alerts = [];
+      if (this.unacknowledged) {
+        alerts = this.filterUnacknowledgedAlerts;
+      } else {
+        alerts = this.filterAlertsBy(
+          this.filterBy,
+          this.filterValue,
+          this.filterNodeId
+        );
+      }
+      return alerts.filter((device, index) => {
         let start = (this.currentPage - 1) * this.pageSize;
         let end = this.currentPage * this.pageSize;
         if (index >= start && index < end) return true;
@@ -150,7 +175,7 @@ export default {
 }
 .modal {
   position: relative;
-  width: 85%;
+  width: 60%;
   padding: 40px;
   margin: 55px auto;
   background: white;
@@ -166,6 +191,11 @@ export default {
   border: none;
   font-weight: 600;
   padding: 3px 6px;
+}
+.closeModal:hover {
+  cursor: pointer;
+  background: red;
+  font-weight: 900;
 }
 .modal .scrollable {
   height: 550px;
