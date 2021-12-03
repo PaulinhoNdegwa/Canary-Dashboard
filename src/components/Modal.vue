@@ -144,7 +144,7 @@ export default {
   top: 0;
   position: fixed;
   background: rgba(0, 0, 0, 0.5);
-  width: 55%;
+  width: 100%;
   height: 100%;
   right: 0;
 }

@@ -18,7 +18,9 @@
     </div>
     <hr />
   </div>
-  <div class="error" v-if="!devices.length && !loading && !fetching_error">Sorry, No devices found</div>
+  <div class="error" v-if="!devices.length && !loading && !fetching_error">
+    Sorry, No devices found
+  </div>
   <br />
 </template>
 
@@ -56,8 +58,8 @@ export default {
 .summary-container {
   margin: 0 20px;
   padding: 10px 0;
-  background: #fff;
   border-radius: 5px;
+  background: linear-gradient(135deg, #008479 0%, #02f15d 80%);
 }
 .main {
   display: flex;
@@ -73,17 +75,18 @@ export default {
   text-align: left !important;
   margin-left: 45px;
   font-weight: 900;
-  color: rgb(0, 13, 128);
+  color: rgb(226, 226, 226);
 }
 .summary-container > h3 {
   font-size: 20px;
   text-align: left !important;
   margin-left: 45px;
-  /* color: #000; */
+  color: rgb(230, 230, 230);
 }
 .summary-container > h3 > strong {
   font-style: italic;
   color: crimson;
+  font-weight: 700;
 }
 .devices-container > h3,
 .alerts-container > h3 {

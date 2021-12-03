@@ -66,6 +66,8 @@ export default {
   background: #fff;
   margin: 0 20px;
   border-radius: 5px;
+  background: linear-gradient(135deg, #008479 0%, #02f15d 80%);
+  padding: 20px 0;
 }
 .device-count h1 {
   color: green;
@@ -83,6 +85,7 @@ export default {
   border: 1px #888 solid;
   border-radius: 5px;
   margin: 20px;
+  background: #fff;
 }
 .device-count h1,
 .alert-count h1 {
